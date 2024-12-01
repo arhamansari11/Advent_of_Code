@@ -28,3 +28,9 @@ The structure is as follows:
    ```bash
    git clone https://github.com/arhamansari11/advent_of_Code.git
    cd advent_of_Code
+
+## Features🌟
+- Efficient Solutions: Solutions are optimized for performance and readability.
+- Dynamic Inputs: All solutions are designed to work with different inputs.
+- Commented Code: Each solution is well-documented for clarity.
+- Diverse Approaches: Some days include multiple solutions showcasing various algorithms.
