@@ -17,6 +17,7 @@ Each day's challenge is organized into its own folder, containing:
 The structure is as follows:
 
 ├── Day 1/ │ ├── input.txt │ └── solution.py 
+<br/>
 ├── Day 2/ │ ├── input.txt │ └── solution.py
 
 
