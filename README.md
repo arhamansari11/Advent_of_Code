@@ -1,6 +1,6 @@
 # Advent of Code 🎄
 
-Welcome to my **Advent of Code** repository! This repository contains my solutions for the annual [Advent of Code](https://adventofcode.com/) programming challenges, spanning all problems from **Day 1** to **Day 25**.
+Welcome to my **Advent of Code** repository! This repository contains my solutions for the annual [Advent of Code](https://adventofcode.com/) programming challenges, spanning all problems from **Day 01** to **Day 25**.
 
 ## 📚 About Advent of Code  
 Advent of Code is an annual series of programming puzzles released daily from December 1st to 25th. These challenges are designed to improve problem-solving and coding skills while providing a festive way to code during the holiday season.
