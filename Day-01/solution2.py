@@ -1,7 +1,7 @@
 # Question 2 Code
 
 # Read the input file
-with open("e:/Advent of Code/Day-1/input.txt") as f:
+with open("e:/Advent of Code/Day-01/input.txt") as f:
     lines = f.read().strip().split("\n")
 
 # Parse the input into two separate lists
