@@ -36,7 +36,8 @@ def find_all_antinodes(file_path):
                         unique_antinodes.add((r_antin, c_antin))
     # Step 3: Return the count of unique antinodes
     return len(unique_antinodes)
-# Path to the input file
+
+# Path to the input files
 file_path = "e:/Advent of Code/Day-08/input.txt"
 
 
