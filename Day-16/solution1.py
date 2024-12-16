@@ -1,56 +1,66 @@
-from collections import deque
+from heapq import heappop, heappush
 
-def parse_input(file_path):
-    with open(file_path, 'r') as f:
-        return [list(line.strip()) for line in f]
-
-def find_start_end(grid):
-    start = end = None
-    for r, row in enumerate(grid):
-        for c, cell in enumerate(row):
+def parse_maze(input_str):
+    maze = [list(line) for line in input_str.strip().split("\n")]
+    start, end = None, None
+    for y, row in enumerate(maze):
+        for x, cell in enumerate(row):
             if cell == 'S':
-                start = (r, c)
+                start = (x, y)
             elif cell == 'E':
-                end = (r, c)
-    return start, end
+                end = (x, y)
+    return maze, start, end
 
-def bfs(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
-    direction_names = ['N', 'S', 'W', 'E']
+def solve_maze(input_str):
+    # Parse the maze
+    maze, start, end = parse_maze(input_str)
     
-    # Queue stores (row, col, direction, score)
-    queue = deque([(start[0], start[1], 3, 0)])  # Start facing East (index 3)
+    # Define movement directions: (dx, dy, direction name)
+    directions = [(0, -1, 'N'), (1, 0, 'E'), (0, 1, 'S'), (-1, 0, 'W')]
+    direction_map = {d[2]: i for i, d in enumerate(directions)}
+
+    # Priority queue for Dijkstra's
+    pq = []
+    heappush(pq, (0, start[0], start[1], 'E'))  # (cost, x, y, facing)
+
+    # Visited set: (x, y, facing)
     visited = set()
-    visited.add((start[0], start[1], 3))
 
-    while queue:
-        r, c, direction, score = queue.popleft()
+    while pq:
+        cost, x, y, facing = heappop(pq)
 
-        # If we reach the end, return the score
-        if (r, c) == end:
-            return score
+        # If reached the end, return the cost
+        if (x, y) == end:
+            return cost
 
-        # Explore all possible movements
-        for i, (dr, dc) in enumerate(directions):
-            nr, nc = r + dr, c + dc
-            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != '#':
-                new_direction = i
-                turn_cost = 1000 if new_direction != direction else 0
-                new_score = score + 1 + turn_cost
-                state = (nr, nc, new_direction)
+        # Skip if already visited
+        if (x, y, facing) in visited:
+            continue
+        visited.add((x, y, facing))
 
-                if state not in visited:
-                    visited.add(state)
-                    queue.append((nr, nc, new_direction, new_score))
+        # Current direction index
+        current_dir_index = direction_map[facing]
 
-    return float('inf')  # If no path is found
+        # Explore neighbors
+        for i, (dx, dy, new_dir) in enumerate(directions):
+            nx, ny = x + dx, y + dy
 
-def main():
-    input_data = parse_input("e:/Advent of Code/Day-16/input.txt")
-    start, end = find_start_end(input_data)
-    lowest_score = bfs(input_data, start, end)
-    print(f"The lowest score a Reindeer could possibly get: {lowest_score}")
+            # If moving forward
+            if i == current_dir_index:
+                if maze[ny][nx] != '#':  # Valid forward move
+                    heappush(pq, (cost + 1, nx, ny, new_dir))
 
-if __name__ == "__main__":
-    main()
+            # If turning (rotating clockwise or counterclockwise)
+            else:
+                turn_cost = 1000
+                heappush(pq, (cost + turn_cost, x, y, new_dir))
+
+    return float('inf')  # No solution found
+
+# Read input from file
+with open("e:/Advent of Code/Day-16/input.txt", "r") as file:
+    input_str = file.read()
+
+# Solve the maze
+result = solve_maze(input_str)
+print("Lowest score:", result)
