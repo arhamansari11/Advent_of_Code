@@ -1,17 +1,11 @@
 import sys
-import re
 from collections import defaultdict, Counter, deque
-# import pyperclip as pc
-
-def pr(s):
-    print(s)
-    pc.copy(s)
 
 # Set the recursion limit (this is rarely needed but might be helpful for large datasets)
 sys.setrecursionlimit(10**6)
 
 # Path to the input file
-infile = 'input.txt'  # Path to input.txt file
+infile =  "e:/Advent of Code/Day-06/input2.txt"  # Path to input.txt file
 
 # Initialize variables for part 1 and part 2 answers
 p1 = 0
@@ -64,5 +58,5 @@ for o_r in range(R):
                 c = cc
 
 # Output the results for part 1 and part 2
-pr(p1)  # Part 1 result
-pr(p2)  # Part 2 result
+print(f"Part 1 result: {p1}")  # Part 1 result
+print(f"Part 2 result: {p2}")  # Part 2 result
