@@ -1,87 +1,62 @@
 
+def solve():
+    with open("E:\Advent of Code\AOC 25\Day-07\input.txt", 'r') as f:
+        grid = [line.rstrip('\n') for line in f.readlines()]
+    
+    # Find the starting position 'S'
+    start_row, start_col = None, None
+    for r, row in enumerate(grid):
+        for c, char in enumerate(row):
+            if char == 'S':
+                start_row, start_col = r, c
+                break
+        if start_row is not None:
+            break
+    
+    # Count unique timelines using dynamic programming
+    # For each position, track how many distinct paths reach it
+    # When a particle hits a splitter, it takes BOTH paths (quantum superposition)
+    
+    from collections import defaultdict
+    paths_count = defaultdict(int)
+    paths_count[(start_row, start_col)] = 1
+    
+    # Process row by row going downward
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if paths_count[(row, col)] == 0:
+                continue
+            
+            count = paths_count[(row, col)]
+            next_row = row + 1
+            
+            # Check if we're at bottom
+            if next_row >= len(grid):
+                continue
+            
+            # Check what's below
+            if col < len(grid[next_row]):
+                next_char = grid[next_row][col]
+            else:
+                next_char = '.'
+            
+            if next_char == '^':
+                # Particle encounters splitter - takes both left and right paths
+                if col - 1 >= 0:
+                    paths_count[(next_row, col - 1)] += count
+                if col + 1 < len(grid[next_row]):
+                    paths_count[(next_row, col + 1)] += count
+            elif next_char == '.':
+                # Empty space - particle continues downward
+                paths_count[(next_row, col)] += count
+    
+    # Count total paths that reached the bottom row
+    total = 0
+    last_row = len(grid) - 1
+    for col in range(len(grid[0])):
+        total += paths_count[(last_row, col)]
+    
+    return total
 
-
-from collections import deque, defaultdict
-
-# Directions
-DIRS = {
-    "U": (-1, 0),
-    "D": (1, 0),
-    "L": (0, -1),
-    "R": (0, 1),
-}
-
-# How splitters work for each direction
-SPLIT = {
-    "/": {"U": "R", "R": "U", "D": "L", "L": "D"},
-    "\\": {"U": "L", "L": "U", "D": "R", "R": "D"},
-}
-
-def part2(grid):
-    R = len(grid)
-    C = len(grid[0])
-
-    start = (0, grid[0].index("S"))
-
-    # Each beam is represented as (row, col, direction)
-    # Instead of visited cells, we track visited STATES (r,c,d)
-    visited = set()
-    q = deque()
-
-    # The particle "splits" in all directions from S
-    for d in DIRS:
-        q.append((start[0], start[1], d))
-        visited.add((start[0], start[1], d))
-
-    timelines = 0
-
-    while q:
-        r, c, d = q.popleft()
-        dr, dc = DIRS[d]
-
-        nr, nc = r + dr, c + dc
-
-        # If out of bounds → timeline ends
-        if not (0 <= nr < R and 0 <= nc < C):
-            timelines += 1
-            continue
-
-        tile = grid[nr][nc]
-
-        # Handle tile behavior
-        if tile == "." or tile == "S":
-            nds = [d]
-
-        elif tile in SPLIT:
-            # Mirror reflection
-            nds = [SPLIT[tile][d]]
-
-        elif tile == "|":
-            if d in ("L", "R"):    # splitter: LR → U+D
-                nds = ["U", "D"]
-            else:                 # UD passthrough
-                nds = [d]
-
-        elif tile == "-":
-            if d in ("U", "D"):    # splitter: UD → L+R
-                nds = ["L", "R"]
-            else:                 # LR passthrough
-                nds = [d]
-
-        else:
-            nds = [d]
-
-        # Add new states
-        for nd in nds:
-            state = (nr, nc, nd)
-            if state not in visited:
-                visited.add(state)
-                q.append(state)
-
-    return timelines
-
-
-# ---- RUN ON INPUT ----
-
-grid = [list(line.rstrip("\n")) for line in open("E:\Advent of Code\AOC 25\Day-07\input.txt")]
-print(part2(grid))
+answer = solve()
+print(f"Answer: {answer}")
