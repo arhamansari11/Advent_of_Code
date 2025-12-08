@@ -1,0 +1,1 @@
+"E:\Advent of Code\AOC 25\Day-08\input.txt"
